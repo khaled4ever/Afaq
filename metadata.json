@@ -1,0 +1,6 @@
+{
+  "name": "Afaq Al-Nasha Real Estate Development",
+  "description": "الموقع الرسمي لشركة آفاق النشأة للتطوير العقاري - نبني آفاقاً جديدة للحياة العصرية بمشاريع سكنية وتجارية فاخرة في المملكة العربية السعودية.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
