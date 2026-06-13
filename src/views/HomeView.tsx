@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { Project, Testimonial } from '../types';
 import {
-  Search, Shield, MapPin, Award, Star, Compass, Clock, Heart, ArrowLeft, ArrowRight, CheckCircle2, Waves, Sparkles, BedDouble, Bath, Maximize, Landmark, Leaf, Settings, ThumbsUp, Building2, HelpCircle
+  Search, Shield, MapPin, Award, Star, Compass, Clock, Heart, ArrowLeft, ArrowRight, CheckCircle2, Waves, Sparkles, BedDouble, Bath, Maximize, Landmark, Leaf, Settings, ThumbsUp, Building2, HelpCircle, ChevronDown
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -221,51 +221,60 @@ export default function HomeView({
             className="max-w-4xl mx-auto bg-white rounded-2xl md:rounded-full p-5 md:p-4 shadow-2xl border border-slate-100 flex flex-col md:flex-row gap-4 text-slate-800 items-center justify-between text-right"
           >
             {/* City option */}
-            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 md:border-l md:border-slate-200">
-              <label className="text-xxs font-extrabold text-slate-400 mb-1">المدن</label>
-              <select
-                value={searchCity}
-                onChange={(e) => setSearchCity(e.target.value)}
-                className="bg-transparent font-bold text-xs text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-1"
-              >
-                <option value="">جميع المدن</option>
-                <option value="الرياض">الرياض</option>
-                <option value="جدة">جدة</option>
-              </select>
+            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 md:border-l md:border-slate-200 relative group">
+              <label className="text-xxs font-extrabold text-slate-400 mb-1.5">المدن</label>
+              <div className="relative flex items-center">
+                <select
+                  value={searchCity}
+                  onChange={(e) => setSearchCity(e.target.value)}
+                  className="bg-transparent font-bold text-sm text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-2 pl-7 pr-0 appearance-none leading-relaxed h-10"
+                >
+                  <option value="">جميع المدن</option>
+                  <option value="الرياض">الرياض</option>
+                  <option value="جدة">جدة</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-slate-400 absolute left-0 pointer-events-none group-hover:text-brand-accent transition-colors" />
+              </div>
             </div>
 
             {/* Type option */}
-            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 md:border-l md:border-slate-200">
-              <label className="text-xxs font-extrabold text-slate-400 mb-1">نوع المشروع</label>
-              <select
-                value={searchType}
-                onChange={(e) => setSearchType(e.target.value)}
-                className="bg-transparent font-bold text-xs text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-1"
-              >
-                <option value="">جميع فئات العقار</option>
-                <option value="residential">سكني فاخر</option>
-                <option value="commercial">تجاري ومكاتب</option>
-              </select>
+            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 md:border-l md:border-slate-200 relative group">
+              <label className="text-xxs font-extrabold text-slate-400 mb-1.5">نوع المشروع</label>
+              <div className="relative flex items-center">
+                <select
+                  value={searchType}
+                  onChange={(e) => setSearchType(e.target.value)}
+                  className="bg-transparent font-bold text-sm text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-2 pl-7 pr-0 appearance-none leading-relaxed h-10"
+                >
+                  <option value="">جميع فئات العقار</option>
+                  <option value="residential">سكني فاخر</option>
+                  <option value="commercial">تجاري ومكاتب</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-slate-400 absolute left-0 pointer-events-none group-hover:text-brand-accent transition-colors" />
+              </div>
             </div>
 
             {/* Budget option */}
-            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0">
-              <label className="text-xxs font-extrabold text-slate-400 mb-1">الميزانية التقريبية</label>
-              <select
-                value={searchBudget}
-                onChange={(e) => setSearchBudget(e.target.value)}
-                className="bg-transparent font-bold text-xs text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-1"
-              >
-                <option value="">جميع الميزانيات</option>
-                <option value="under4">أقل من 4 مليون ر.س</option>
-                <option value="above4">أكثر من 4 مليون ر.س</option>
-              </select>
+            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 relative group">
+              <label className="text-xxs font-extrabold text-slate-400 mb-1.5">الميزانية التقريبية</label>
+              <div className="relative flex items-center">
+                <select
+                  value={searchBudget}
+                  onChange={(e) => setSearchBudget(e.target.value)}
+                  className="bg-transparent font-bold text-sm text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-2 pl-7 pr-0 appearance-none leading-relaxed h-10"
+                >
+                  <option value="">جميع الميزانيات</option>
+                  <option value="under4">أقل من 4 مليون ر.س</option>
+                  <option value="above4">أكثر من 4 مليون ر.س</option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-slate-400 absolute left-0 pointer-events-none group-hover:text-brand-accent transition-colors" />
+              </div>
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full md:w-auto bg-brand-primary text-white hover:bg-brand-dark px-8 py-3.5 rounded-xl md:rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
+              className="w-full md:w-auto bg-brand-primary text-white hover:bg-brand-dark px-8 py-3.5 rounded-xl md:rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer hover:scale-[1.02] duration-300 active:scale-[0.98]"
             >
               <Search className="w-4 h-4 text-brand-light" />
               <span>بحث ذكي</span>
