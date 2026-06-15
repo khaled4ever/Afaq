@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { Project, Testimonial } from '../types';
 import {
-  Search, Shield, MapPin, Award, Star, Compass, Clock, Heart, ArrowLeft, ArrowRight, CheckCircle2, Waves, Sparkles, BedDouble, Bath, Maximize, Landmark, Leaf, Settings, ThumbsUp, Building2, HelpCircle, ChevronDown
+  Search, Shield, MapPin, Award, Star, Compass, Clock, Heart, ArrowLeft, ArrowRight, CheckCircle2, Sparkles, BedDouble, Bath, Maximize, Landmark, Leaf, Settings, ThumbsUp, Building2, HelpCircle, ChevronDown, Eye, CheckSquare, ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -24,15 +24,15 @@ export default function HomeView({
   onNavigate
 }: HomeViewProps) {
   
-  // Hero Search states
+  // Hero Search states (kept for compatibility & modal fallbacks)
   const [searchCity, setSearchCity] = useState('');
   const [searchType, setSearchType] = useState('');
   const [searchBudget, setSearchBudget] = useState('');
 
-  // Testimonial slider states
+  // Active testimonial index
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
-  // CRM sales form states
+  // CRM quick lead data
   const [crmSubmitted, setCrmSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -42,28 +42,15 @@ export default function HomeView({
     notes: ''
   });
 
-  const handleHeroSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onNavigate('projects', null, {
-      city: searchCity,
-      type: searchType,
-      budget: searchBudget
-    });
-  };
-
   const handleCrmSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.fullName && formData.phone) {
       setCrmSubmitted(true);
       setTimeout(() => {
-        // Reset after duration
+        setCrmSubmitted(false);
         setFormData({ fullName: '', phone: '', project: '', budget: '', notes: '' });
       }, 5000);
     }
-  };
-
-  const formatSAR = (num: number) => {
-    return new Intl.NumberFormat('ar-SA', { style: 'currency', currency: 'SAR', maximumFractionDigits: 0 }).format(num);
   };
 
   const nextTestimonial = () => {
@@ -74,542 +61,472 @@ export default function HomeView({
     setActiveTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const whyUsFeatures = [
-    {
-      title: 'جودة البناء الفائقة',
-      description: 'نؤسس هياكل البناء وفق أكواد وخرسانات معتمدة ومقاومة لأقصى عوامل الضغط وبتطبيق أحدث كود عزل سعودي.',
-      icon: Shield,
-      badge: 'جودة مستدامة'
-    },
-    {
-      title: 'مواقع بالغة الأهمية',
-      description: 'نختار مواقع مشاريعنا بشق الأنفس في أرقى أحياء الرياض وجدة على شوارع فسيحة وبمحاذاة أهم الطرق والشرايين الرئيسة.',
-      icon: Compass,
-      badge: 'قيمة مضافة'
-    },
-    {
-      title: 'تصاميم فندقية مذهلة',
-      description: 'تصاميمنا صاغها كبار مصممي الديكور والهندسة للاستغلال الذكي للفراغات وخلق طفرة من الرفاهية والراحة بإنارة طبيعية كاملة.',
-      icon: Sparkles,
-      badge: 'مودرن راقي'
-    },
-    {
-      title: 'التزام صارم بالتسليم',
-      description: 'نحترم الأوقات كفلسفة عمل أساسية ونطبق أحدث برمجيات إدارة المهام الإنشائية لضمان تسليم وحدتكم في الموعد المضروب دقة.',
-      icon: Clock,
-      badge: 'مصداقية كاملة'
-    },
-    {
-      title: 'عقود ضمان وصيانة شاملة',
-      description: 'خدمة ضمان تصل لغاية 25 عاماً على الهياكل الإنشائية وعشر سنوات على السباكة والكهرباء والواجهات والتشطيب العام مع صيانة مرنة.',
-      icon: Settings,
-      badge: 'راحة البال'
-    },
-    {
-      title: 'بناء استثماري موثوق',
-      description: 'مشاريعنا مصممة لتواكب تطلعات الاستثمار بتقديمها لشرائح المستثمرين عوائد تشغيل سنوية ممتازة ونسبة إعادة استثمار فائقة السخاء.',
-      icon: ThumbsUp,
-      badge: 'عوائد ممتازة'
-    }
-  ];
-
-  const journeySteps = [
-    {
-      step: '01',
-      title: 'اختيار المشروع والوحدة',
-      desc: 'استكشف مشاريعنا المميزة المتطابقة مع ميزانيتك وراحتك بمساعدة مستشارينا الماليين.'
-    },
-    {
-      step: '02',
-      title: 'زيارة خاصة لموقع العرض',
-      desc: 'احجز موعداً وسيرافقك خبير هندسي لشرح تفاصيل الإنشاء وبنود التشطيب وجودة المواد المستخدمة.'
-    },
-    {
-      step: '03',
-      title: 'تحديد الهيكلة التمويلية',
-      desc: 'من خلال البنوك الشريكة نسّق أفضل قسط شهري وخطة تمويل عقارية ملائمة لميزانيتك العائلية.'
-    },
-    {
-      step: '04',
-      title: 'التعاقد الفوري والتوثيق',
-      desc: 'إجراءات تملك بالغة السلاسة والوضوح مطابقة لتعليمات وزارة الإسكان والهيئات التنظيمية.'
-    },
-    {
-      step: '05',
-      title: 'استلام المفاتيح وعقود الضمان',
-      desc: 'نهنئك في تملك منزلك ونسلّمك دليلك الكامل للبيت الذكي وشهادات الفحص وضمانات الجودة الموثقة.'
-    }
-  ];
+  // Keep specific project items matching the four visible on the screenshot
+  const specificProjects = [
+    projects.find(p => p.id === 'afaq-residence-03') || projects[2], // فلل آفاق الرحاب
+    projects.find(p => p.id === 'afaq-residence-01') || projects[0], // فلل آفاق النرجس
+    projects.find(p => p.id === 'afaq-center-04') || projects[3],    // فلل آفاق الملقا
+    projects.find(p => p.id === 'afaq-residence-02') || projects[1]  // فلل آفاق الياسمين
+  ].filter(Boolean);
 
   return (
-    <div id="home-view-wrapper" className="space-y-24 pb-20">
+    <div id="home-view-wrapper" className="space-y-24 pb-20 bg-white">
       
       {/* 1. Hero Splendour Panel */}
-      <section id="hero-luxury-stage" className="relative min-h-[95vh] lg:h-[95vh] flex items-center justify-center py-24 lg:py-0 overflow-hidden">
+      <section id="hero-luxury-stage" className="relative min-h-[92vh] flex items-center justify-center py-20 overflow-hidden">
         {/* HQ Architectural Render Background */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=90" 
+            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=95" 
             alt="Afaq Al Nasha Luxury Residence dusk" 
-            className="w-full h-full object-cover scale-102 brightness-65 transition-all duration-1000"
+            className="w-full h-full object-cover scale-102 brightness-50 transition-all duration-1000"
             referrerPolicy="no-referrer"
           />
           {/* Royal Dark Blue overlay gradient for premium contrast and readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0D2E5E]/40 via-[#071C3D]/60 to-[#071C3D]/95 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#051124]/50 via-[#051124]/75 to-[#051124]/95 mix-blend-multiply" />
         </div>
 
         {/* Hero content */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center text-white space-y-8 mt-16 md:mt-20">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="inline-flex items-center gap-2 bg-brand-accent/20 border border-brand-accent/40 rounded-full px-5 py-2 text-brand-accent font-extrabold text-xs tracking-wide"
-          >
-            <Sparkles className="w-4 h-4" />
-            <span>شركة آفاق النشأة للتطوير العقاري - فخامة متوارثة</span>
-          </motion.div>
-
+        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center text-white space-y-8 mt-16 md:mt-24">
           {/* Heading */}
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight md:leading-snug text-white"
+            transition={{ duration: 1 }}
+            className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight md:leading-snug text-white"
           >
-            نبني آفاقاً جديدة <br className="hidden md:inline" />
-            <span className="text-brand-accent">للحياة العصرية والفاخرة</span>
+            نبني الثقة <br />
+            <span className="text-[#C5A880] mt-2 block">قبل أن نبني المنازل</span>
           </motion.h2>
 
           {/* Subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.4 }}
-            className="text-sm md:text-lg text-slate-200 font-semibold max-w-2xl mx-auto leading-relaxed"
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-sm md:text-lg text-slate-200 font-medium max-w-2xl mx-auto leading-relaxed"
           >
-            نطوّر مشاريع سكنية وتجارية حصرية وبمعايير عالمية تجمع بين أصالة الجودة والابتكار المستدام لإثراء أسلوب معيشتك.
+            في آفاق النشأة للتطوير العقاري، نمتلك ونطور مشاريعنا بمعايير عالية لجودة تصنع الفرق وتبني قيمة تدوم.
           </motion.p>
 
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-4 pt-2"
+            transition={{ duration: 1, delay: 0.4 }}
+            className="flex flex-wrap justify-center gap-4 pt-4 flex-row-reverse"
           >
             <button
               onClick={() => onNavigate('projects')}
-              className="px-8 py-3.5 bg-brand-accent hover:bg-amber-600 text-brand-dark font-black rounded-xl text-sm shadow-xl hover:shadow-brand-accent/20 transition-all shimmer-btn cursor-pointer"
+              className="px-8 py-3.5 bg-[#C5A880] hover:bg-[#b59870] text-slate-900 font-extrabold rounded-lg text-xs md:text-sm shadow-xl transition-all cursor-pointer active:scale-95"
             >
-              استعرض المجمع السكني
+              استكشف مشاريعنا
             </button>
             <button
-              onClick={() => onNavigate('contact')}
-              className="px-8 py-3.5 bg-white/10 hover:bg-white/20 text-white font-bold border border-white/25 hover:border-white/50 rounded-xl text-sm transition-all backdrop-blur-sm cursor-pointer"
+              onClick={() => onNavigate('about')}
+              className="px-8 py-3.5 bg-transparent hover:bg-white/10 text-white font-bold border border-white/20 rounded-lg text-xs md:text-sm transition-all backdrop-blur-xs cursor-pointer active:scale-95"
             >
-              احجز استشارتك المجانية
+              عن الشركة
             </button>
           </motion.div>
+        </div>
 
-          {/* Smart Autocomplete Search Overlay Form */}
-          <motion.form
-            onSubmit={handleHeroSearchSubmit}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8 }}
-            className="max-w-4xl mx-auto bg-white rounded-2xl md:rounded-full p-5 md:p-4 shadow-2xl border border-slate-100 flex flex-col md:flex-row gap-4 text-slate-800 items-center justify-between text-right"
-          >
-            {/* City option */}
-            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 md:border-l md:border-slate-200 relative group">
-              <label className="text-xxs font-extrabold text-slate-400 mb-1.5">المدن</label>
-              <div className="relative flex items-center">
-                <select
-                  value={searchCity}
-                  onChange={(e) => setSearchCity(e.target.value)}
-                  className="bg-transparent font-bold text-sm text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-2 pl-7 pr-0 appearance-none leading-relaxed h-10"
-                >
-                  <option value="">جميع المدن</option>
-                  <option value="الرياض">الرياض</option>
-                  <option value="جدة">جدة</option>
-                </select>
-                <ChevronDown className="w-4 h-4 text-slate-400 absolute left-0 pointer-events-none group-hover:text-brand-accent transition-colors" />
-              </div>
-            </div>
-
-            {/* Type option */}
-            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 md:border-l md:border-slate-200 relative group">
-              <label className="text-xxs font-extrabold text-slate-400 mb-1.5">نوع المشروع</label>
-              <div className="relative flex items-center">
-                <select
-                  value={searchType}
-                  onChange={(e) => setSearchType(e.target.value)}
-                  className="bg-transparent font-bold text-sm text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-2 pl-7 pr-0 appearance-none leading-relaxed h-10"
-                >
-                  <option value="">جميع فئات العقار</option>
-                  <option value="residential">سكني فاخر</option>
-                  <option value="commercial">تجاري ومكاتب</option>
-                </select>
-                <ChevronDown className="w-4 h-4 text-slate-400 absolute left-0 pointer-events-none group-hover:text-brand-accent transition-colors" />
-              </div>
-            </div>
-
-            {/* Budget option */}
-            <div className="w-full md:w-1/4 flex flex-col px-4 text-right border-b border-slate-100 pb-3 md:pb-0 md:border-b-0 relative group">
-              <label className="text-xxs font-extrabold text-slate-400 mb-1.5">الميزانية التقريبية</label>
-              <div className="relative flex items-center">
-                <select
-                  value={searchBudget}
-                  onChange={(e) => setSearchBudget(e.target.value)}
-                  className="bg-transparent font-bold text-sm text-brand-primary border-none outline-none focus:ring-0 w-full cursor-pointer hover:text-brand-accent transition-colors py-2 pl-7 pr-0 appearance-none leading-relaxed h-10"
-                >
-                  <option value="">جميع الميزانيات</option>
-                  <option value="under4">أقل من 4 مليون ر.س</option>
-                  <option value="above4">أكثر من 4 مليون ر.س</option>
-                </select>
-                <ChevronDown className="w-4 h-4 text-slate-400 absolute left-0 pointer-events-none group-hover:text-brand-accent transition-colors" />
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              className="w-full md:w-auto bg-brand-primary text-white hover:bg-brand-dark px-8 py-3.5 rounded-xl md:rounded-full font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer hover:scale-[1.02] duration-300 active:scale-[0.98]"
-            >
-              <Search className="w-4 h-4 text-brand-light" />
-              <span>بحث ذكي</span>
+        {/* Slider Controls in bottom-left corner */}
+        <div className="absolute bottom-10 left-6 md:left-12 lg:left-24 z-10 flex items-center gap-4 text-white select-none">
+          <span className="text-2xl font-black tracking-widest text-[#C5A880]">01</span>
+          <div className="w-12 h-[1px] bg-white/20" />
+          <div className="flex gap-2">
+            <button type="button" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all cursor-pointer">
+              <ArrowRight className="w-4 h-4 text-white" />
             </button>
-          </motion.form>
+            <button type="button" className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 flex items-center justify-center transition-all cursor-pointer">
+              <ArrowLeft className="w-4 h-4 text-white" />
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* 2. Stats Panel Section */}
-      <section id="stats-dashboard" className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="bg-brand-primary rounded-3xl p-8 md:p-12 text-white relative overflow-hidden shadow-2xl">
-          {/* Graphic circles in the background */}
-          <div className="absolute top-0 right-0 w-72 h-72 bg-brand-light/10 rounded-full -translate-y-24 translate-x-24 z-0 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-accent/5 rounded-full translate-y-24 -translate-x-24 z-0 blur-2xl pointer-events-none" />
+      {/* 2. About Us Section (من نحن) */}
+      <section id="about-brief-panel" className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          
+          {/* Left: Beautiful Overlapping Image Block */}
+          <div className="lg:col-span-6 relative group">
+            <div className="relative h-[480px] rounded-3xl overflow-hidden shadow-2xl border border-slate-100">
+              <img 
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" 
+                alt="Afaq modern architecture villa" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#051124]/40 to-transparent pointer-events-none" />
+            </div>
 
-          <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 divide-y sm:divide-y-0 sm:divide-x lg:divide-x-reverse divide-white/10 text-center">
+            {/* Overlapping Box matching the photo details */}
+            <div className="absolute bottom-6 right-6 left-6 md:left-auto md:w-80 bg-[#051124] text-white p-6 rounded-2xl shadow-2xl border-r-4 border-[#C5A880] z-20">
+              <h4 className="font-extrabold text-[#C5A880] text-sm md:text-base leading-relaxed">نحن مطور ومالك</h4>
+              <p className="text-[10px] text-slate-300 font-medium tracking-wide mt-1">(Owner & Developer)</p>
+              
+              <div className="mt-4 space-y-2 text-xs text-slate-200 font-medium">
+                <p className="flex items-center gap-1.5 flex-row-reverse text-right">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C5A880]" />
+                  <span>نمتلك الأرض...</span>
+                </p>
+                <p className="flex items-center gap-1.5 flex-row-reverse text-right">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C5A880]" />
+                  <span>ونشرف على التطوير...</span>
+                </p>
+                <p className="flex items-center gap-1.5 flex-row-reverse text-right">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#C5A880]" />
+                  <span>لنقدم قيمة حقيقية.</span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Text Description & Features */}
+          <div className="lg:col-span-6 text-right space-y-6">
+            <span className="text-[#C5A880] font-black text-xs uppercase tracking-wider block">من نحن</span>
+            <h3 className="text-3xl md:text-4.5xl font-black text-[#051124] leading-tight">آفاق النشأة للتطوير العقاري</h3>
             
-            {/* Stat Item 1 */}
-            <div className="pt-6 sm:pt-0">
-              <span className="text-3xl md:text-5xl font-black text-brand-accent tracking-tight block mb-2">+146,000 م²</span>
-              <h5 className="text-xs md:text-sm font-bold text-slate-300">مسطحات ومساحات التطوير المنجزة</h5>
-              <p className="text-xxs text-slate-500 mt-1 font-semibold">تطوير مستدام بمعايير بالغة الدقة</p>
+            <p className="text-slate-600 text-xs md:text-sm font-semibold leading-relaxed">
+              شركة سعودية متخصصة في تطوير المشاريع السكنية والاستثمارية التي نمتلكها، ونشرف على جميع مراحلها من التخطيط والتصميم إلى التنفيذ والتسليم بجودة عالية ومعايير دقيقة.
+            </p>
+            <p className="text-slate-500 text-xs md:text-sm font-medium leading-relaxed">
+              نؤمن أن امتلاك المشروع وتطويره يمنحنا القدرة على التحكم الكامل في الجودة والتفاصيل، وتقديم قيمة حقيقية ومستدامة لعملائنا.
+            </p>
+
+            {/* Row of 4 items side-by-side */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
+              <div className="bg-slate-50 p-4 rounded-xl text-center space-y-2 border border-slate-100 hover:border-[#C5A880]/30 transition-colors">
+                <div className="w-9 h-9 mx-auto rounded-full bg-[#051124]/5 flex items-center justify-center text-[#051124]">
+                  <Building2 className="w-4 h-4" />
+                </div>
+                <h5 className="font-extrabold text-[11px] text-[#051124]">نمتلك مشاريعنا</h5>
+              </div>
+
+              <div className="bg-slate-50 p-4 rounded-xl text-center space-y-2 border border-slate-100 hover:border-[#C5A880]/30 transition-colors">
+                <div className="w-9 h-9 mx-auto rounded-full bg-[#051124]/5 flex items-center justify-center text-[#051124]">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <h5 className="font-extrabold text-[11px] text-[#051124]">نلتزم بالجودة</h5>
+              </div>
+
+              <div className="bg-slate-50 p-4 rounded-xl text-center space-y-2 border border-slate-100 hover:border-[#C5A880]/30 transition-colors">
+                <div className="w-9 h-9 mx-auto rounded-full bg-[#051124]/5 flex items-center justify-center text-[#051124]">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <h5 className="font-extrabold text-[11px] text-[#051124]">نطوّر بمعاييرنا</h5>
+              </div>
+
+              <div className="bg-slate-50 p-4 rounded-xl text-center space-y-2 border border-slate-100 hover:border-[#C5A880]/30 transition-colors">
+                <div className="w-9 h-9 mx-auto rounded-full bg-[#051124]/5 flex items-center justify-center text-[#051124]">
+                  <Leaf className="w-4 h-4" />
+                </div>
+                <h5 className="font-extrabold text-[11px] text-[#051124]">نقدم قيمة مستدامة</h5>
+              </div>
             </div>
 
-            {/* Stat Item 2 */}
-            <div className="pt-6 sm:pt-0 sm:px-6">
-              <span className="text-3xl md:text-5xl font-black text-brand-accent tracking-tight block mb-2">+54 مشروعاً</span>
-              <h5 className="text-xs md:text-sm font-bold text-slate-300">محفظة المشاريع العقارية الكبرى</h5>
-              <p className="text-xxs text-slate-500 mt-1 font-semibold">بناء عمراني معتمد يحقق مصداقيتنا</p>
+            <div className="pt-4">
+              <button
+                onClick={() => onNavigate('about')}
+                className="px-8 py-3 bg-[#051124] text-white hover:bg-[#C5A880] hover:text-[#051124] rounded-lg text-xs font-bold transition-all shadow-md cursor-pointer active:scale-95"
+              >
+                المزيد عن الشركة
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 3. Vision & Mission Section (رؤيتنا ورسالتنا) */}
+      <section id="vision-mission-panel" className="bg-[#051124] py-16 text-white text-right relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#C5A880_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:divide-x md:divide-x-reverse md:divide-white/10">
+            
+            {/* Right: Vision */}
+            <div className="space-y-4 md:pl-8">
+              <div className="w-12 h-12 rounded-full border border-[#C5A880]/40 flex items-center justify-center text-[#C5A880] mb-2 mr-auto md:mr-0 ml-auto md:ml-0">
+                <Sparkles className="w-5 h-5 bg-transparent" />
+              </div>
+              <h4 className="font-black text-[#C5A880] text-xl md:text-2xl">رؤيتنا</h4>
+              <p className="text-slate-300 text-xs md:text-sm font-medium leading-relaxed max-w-xl">
+                أن نصنع وجهات سكنية واستثمارية متميزة من خلال تطوير مشاريع نمتلكها ونؤمن بقيمتها، لتكون علامة فارقة في قطاع التطوير العقاري وجودة الحياة.
+              </p>
             </div>
 
-            {/* Stat Item 3 */}
-            <div className="pt-6 sm:pt-0 sm:px-6">
-              <span className="text-3xl md:text-5xl font-black text-brand-accent tracking-tight block mb-2">+810 وحدة</span>
-              <h5 className="text-xs md:text-sm font-bold text-slate-300">وحدة سكنية وتجارية تم تسليمها بنجاح</h5>
-              <p className="text-xxs text-slate-500 mt-1 font-semibold">ثقة تنبع من الرقي والاتقان المعماري</p>
+            {/* Left: Mission */}
+            <div className="space-y-4 md:pr-12 pt-8 md:pt-0">
+              <div className="w-12 h-12 rounded-full border border-[#C5A880]/40 flex items-center justify-center text-[#C5A880] mb-2 mr-auto md:mr-0 ml-auto md:ml-0">
+                <Compass className="w-5 h-5 bg-transparent" />
+              </div>
+              <h4 className="font-black text-[#C5A880] text-xl md:text-2xl">رسالتنا</h4>
+              <p className="text-slate-300 text-xs md:text-sm font-medium leading-relaxed max-w-xl">
+                في آفاق النشأة، نبدأ من امتلاك الفرصة قبل تطويرها، ونشرف على جميع مراحل المشروع بدءاً من اختيار الموقع والتخطيط والتصميم وحتى التنفيذ والتسليم، لنقدم مشاريع تعكس رؤيتنا للجودة والثقة والاستدامة.
+              </p>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* 3. Why Afaq Al-Nasha Section (Bento Grid) */}
-      <section id="why-us" className="max-w-7xl mx-auto px-4 md:px-8 space-y-12">
+      {/* 4. Projects Section (مشاريعنا) */}
+      <section id="featured-portfolio" className="max-w-7xl mx-auto px-4 md:px-8 space-y-12">
         <div className="text-center space-y-3">
-          <span className="text-brand-light font-extrabold text-xs tracking-wider uppercase block">خصائص النخبة المعمارية</span>
-          <h3 className="text-2xl md:text-3.5xl font-black text-brand-primary">لماذا يُعدّ التطوير العقاري في آفاق النشأة استثماراً للأجيال؟</h3>
-          <p className="text-xs md:text-sm text-slate-500 max-w-2xl mx-auto font-bold leading-relaxed">
-            نهتم بأدق تفاصيل الإنشاء، ونتعاون مع أفضل الكفاءات لتقديم صروح عقارية نموذجية تمنحك الأمان، الفخامة والقيمة الأعلى.
-          </p>
+          <span className="text-[#C5A880] font-black text-xs uppercase tracking-wider block">مشاريعنا</span>
+          <h3 className="text-3xl md:text-4xl lg:text-4.5xl font-black text-[#051124]">مشاريع نمتلكها... ونطورها بمعاييرنا</h3>
         </div>
 
-        {/* Bento grid layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {whyUsFeatures.map((ft, index) => {
-            const IconComponent = ft.icon;
+        {/* Real Estate Grid (4 Projects side by side matching image) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {specificProjects.map((p) => {
+            const displayImg = p.id === 'afaq-residence-03' 
+              ? 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=800&q=80'
+              : p.id === 'afaq-residence-01'
+              ? 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80'
+              : p.id === 'afaq-center-04'
+              ? 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'
+              : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80';
+
             return (
-              <div
-                key={index}
-                className="bg-white border border-slate-100 rounded-2xl p-6 hover:shadow-xl hover:border-brand-primary/10 transition-all text-right flex flex-col justify-between group"
+              <motion.div
+                key={p.id}
+                onClick={() => onNavigate('project-detail', p.id)}
+                className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all text-right flex flex-col h-full cursor-pointer group"
               >
-                <div>
-                  <div className="flex justify-between items-center mb-4 flex-row-reverse">
-                    <div className="w-11 h-11 bg-brand-primary/5 rounded-xl flex items-center justify-center text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all">
-                      <IconComponent className="w-5 h-5" />
-                    </div>
-                    <span className="text-xxs font-extrabold px-2.5 py-1 bg-brand-bg rounded-md text-slate-500">
-                      {ft.badge}
-                    </span>
+                {/* Image panel */}
+                <div className="relative h-64 bg-slate-100 overflow-hidden">
+                  <img 
+                    src={displayImg} 
+                    alt={p.title} 
+                    className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                  
+                  {/* District / City overlay directly on image as seen in clean mockups */}
+                  <div className="absolute bottom-4 right-4 text-white space-y-1">
+                    <p className="text-[10px] font-bold text-[#C5A880]">{p.city} - {p.district}</p>
+                    <h4 className="font-extrabold text-sm md:text-base text-white">
+                      {p.title}
+                    </h4>
                   </div>
-
-                  <h4 className="font-extrabold text-slate-800 text-sm md:text-base group-hover:text-brand-primary transition-colors mb-2">
-                    {ft.title}
-                  </h4>
-                  <p className="text-slate-500 text-xs leading-relaxed font-semibold">
-                    {ft.description}
-                  </p>
                 </div>
 
-                <div className="pt-4 flex items-center gap-1.5 justify-start text-[10px] font-black text-brand-accent hover:text-brand-primary transition-all cursor-pointer">
-                  <span>تعرّف على شهادات الجودة الخاصة بنا</span>
-                  <ArrowLeft className="w-3.5 h-3.5" />
+                {/* Body actions */}
+                <div className="p-4 bg-white border-t border-slate-50 flex items-center justify-between">
+                  <span className="text-[10px] font-black text-slate-400">عقار فاخر</span>
+                  <div className="flex items-center gap-1.5 text-xs font-black text-[#C5A880] group-hover:text-[#051124] transition-colors flex-row-reverse">
+                    <span>استعراض المشروع</span>
+                    <ArrowLeft className="w-3.5 h-3.5 transform group-hover:-translate-x-1 transition-transform" />
+                  </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
+
+        {/* Carousel buttons & main archive trigger */}
+        <div className="flex flex-col sm:flex-row justify-between items-center pt-6 gap-6">
+          <div className="flex gap-2">
+            <button type="button" className="w-9 h-9 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center justify-center transition-all cursor-pointer">
+              <ArrowRight className="w-4 h-4 text-[#051124]" />
+            </button>
+            <button type="button" className="w-9 h-9 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center justify-center transition-all cursor-pointer">
+              <ArrowLeft className="w-4 h-4 text-[#051124]" />
+            </button>
+          </div>
+
+          <button
+            onClick={() => onNavigate('projects')}
+            className="px-10 py-3.5 bg-[#C5A880] text-slate-900 hover:bg-[#b59870] font-extrabold rounded-lg text-xs md:text-sm shadow-md transition-all cursor-pointer active:scale-95"
+          >
+            عرض جميع المشاريع
+          </button>
+        </div>
       </section>
 
-      {/* 4. Featured Projects Section */}
-      <section id="featured-portfolio" className="bg-brand-bg py-20 border-y border-slate-100">
+      {/* 5. Advantages section (ما يميزنا) */}
+      <section id="why-us" className="bg-[#F8F9FA]/60 py-20 border-y border-slate-50">
         <div className="max-w-7xl mx-auto px-4 md:px-8 space-y-12">
           
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 flex-row-reverse">
-            <div className="text-right space-y-2">
-              <span className="text-brand-light font-extrabold text-xs tracking-wider uppercase block">بوابة المعالم السكنية</span>
-              <h3 className="text-2xl md:text-3.5xl font-black text-brand-primary">المشاريع والمجتمعات المميزة</h3>
-              <p className="text-xs font-bold text-slate-500 max-w-xl">فلل، قصور ومكاتب مبتكرة بأحدث بنود الهندسة وتسهيلات الدفع والتمويل المتنوعة بالرياض وجدة.</p>
-            </div>
+          <div className="text-center space-y-3">
+            <span className="text-[#C5A880] font-black text-xs uppercase block">ما يميزنا</span>
+            <div className="w-12 h-0.5 bg-[#C5A880] mx-auto" />
+          </div>
+
+          {/* Clean 6 White Cards Grid matching perfectly visual mockup styling */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             
-            <button
-              onClick={() => onNavigate('projects')}
-              className="px-6 py-3 bg-brand-primary hover:bg-brand-dark text-white rounded-xl font-bold text-xs transition-all flex items-center gap-2 flex-row-reverse shadow-md cursor-pointer"
-            >
-              <span>مشاهدة كافة المحفظة العقارية ({projects.length})</span>
-              <ArrowLeft className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Cards Portfolio Container */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.slice(0, 3).map((p) => {
-              return (
-                <motion.div
-                  key={p.id}
-                  className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all text-right flex flex-col h-full"
-                >
-                  {/* Image and Status Bar */}
-                  <div className="relative h-60 bg-slate-100 overflow-hidden">
-                    <img 
-                      src={p.images[0]} 
-                      alt={p.title} 
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                    
-                    {/* Dark gradient shadow inside image for contrast */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
-
-                    {/* Status badge */}
-                    <span className={`absolute top-4 right-4 px-3.5 py-1.5 rounded-full text-[10px] font-black tracking-wide text-white shadow-md ${
-                      p.status === 'available' ? 'bg-green-600' :
-                      p.status === 'under-construction' ? 'bg-amber-600' :
-                      p.status === 'launching-soon' ? 'bg-purple-600 font-extrabold' : 'bg-slate-600'
-                    }`}>
-                      {p.status === 'available' ? 'متاح للبيـع' :
-                       p.status === 'under-construction' ? 'على هيكل الإنشاء' :
-                       p.status === 'launching-soon' ? 'إطلاق مرتقب' : 'بيعت بالكامل'}
-                    </span>
-
-                    {/* Project Category badge */}
-                    <span className="absolute bottom-4 right-4 bg-white/95 text-brand-primary px-3 py-1 rounded-lg text-xxs font-black tracking-wider shadow-sm">
-                      {p.category}
-                    </span>
-                  </div>
-
-                  {/* Body Info */}
-                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-1.5 text-slate-400 font-extrabold text-xxs justify-start">
-                        <MapPin className="w-3.5 h-3.5 text-brand-light" />
-                        <span>حي {p.district}، {p.city}</span>
-                      </div>
-                      
-                      <h4 className="font-extrabold text-slate-800 text-sm md:text-base line-clamp-1">
-                        {p.title}
-                      </h4>
-                      <p className="text-slate-500 text-xs line-clamp-2 h-10 leading-relaxed font-semibold">
-                        {p.briefDescription}
-                      </p>
-                    </div>
-
-                    {/* Specifications Metrics */}
-                    <div className="flex items-center justify-between border-y border-slate-100 py-3 text-slate-500 font-bold text-xxs gap-2">
-                      <div className="flex items-center gap-1">
-                        <Maximize className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{p.area} م²</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <BedDouble className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{p.rooms ? `${p.rooms} غرف` : 'مساحة بضائع'}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Bath className="w-3.5 h-3.5 text-slate-400" />
-                        <span>{p.bathrooms ? `${p.bathrooms} حمّام` : 'مرافق متكاملة'}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between items-end">
-                      <div>
-                        <span className="text-[10px] block font-extrabold text-slate-400">سعر يبدأ من</span>
-                        <span className="text-brand-primary text-base font-extrabold">{formatSAR(p.price)}</span>
-                      </div>
-
-                      <button
-                        onClick={() => onNavigate('project-detail', p.id)}
-                        className="text-xs font-black text-brand-accent hover:text-brand-primary transition-all flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>طلب وحجز الوحدة</span>
-                        <ArrowLeft className="w-4 h-4 animate-pulse" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-        </div>
-      </section>
-
-      {/* 5. Customer Journey Map */}
-      <section id="customer-journey" className="max-w-7xl mx-auto px-4 md:px-8 space-y-16">
-        <div className="text-center space-y-3">
-          <span className="text-brand-light font-extrabold text-xs tracking-wider uppercase block">شراكة العمر الآمنة</span>
-          <h3 className="text-2xl md:text-3.5xl font-black text-brand-primary">رحلة تميز عميل تملك آفاق وعقود جودة البناء</h3>
-          <p className="text-xs md:text-sm text-slate-500 max-w-2xl mx-auto font-bold leading-relaxed">
-            من الاختيار البصري إلى الاستلام القانوني وضمانات المهندس، نلتزم بمرافقتك بكل وضوح وشفافية لراحة منزلك.
-          </p>
-        </div>
-
-        {/* Steps flow component */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 text-right relative">
-          
-          {/* Background Connector Bar (desktop only) */}
-          <div className="hidden md:block absolute top-12 left-10 right-10 h-0.5 bg-slate-100 -z-10" />
-
-          {journeySteps.map((j, index) => (
-            <div key={index} className="space-y-4 bg-white border border-slate-100 rounded-2xl p-5 md:p-4 hover:border-brand-accent transition-colors relative">
-              <div className="w-12 h-12 rounded-xl bg-brand-primary text-brand-accent font-black text-lg flex items-center justify-center shadow-md">
-                {j.step}
+            {/* Card 1 */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all text-center space-y-4 flex flex-col justify-center items-center">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#C5A880]">
+                <Building2 className="w-5 h-5 bg-transparent" />
               </div>
-              <h4 className="font-extrabold text-sm text-slate-800 pt-1 leading-relaxed">
-                {j.title}
-              </h4>
-              <p className="text-slate-500 text-xxs leading-relaxed font-semibold">
-                {j.desc}
-              </p>
+              <h5 className="font-extrabold text-[12px] text-[#051124] leading-relaxed">نمتلك ونطور مشاريعنا</h5>
             </div>
-          ))}
-        </div>
-      </section>
 
-      {/* 6. HQ Partner Logo and Banks Rail */}
-      <section id="corporate-partners" className="bg-white py-12 border-y border-slate-50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <p className="text-center text-slate-400 font-extrabold text-xxs tracking-wider uppercase mb-8">شراكاء النجاح وبنوك التمويل المعتمدة ومطور سكني</p>
-          
-          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-14 opacity-75">
-            {partners.map((p, index) => (
-              <div key={index} className="flex flex-col items-center justify-center space-y-1.5">
-                <span className="font-black text-xs md:text-sm text-slate-700 hover:text-brand-primary transition-colors text-center block">
-                  {p.name}
-                </span>
-                <span className="text-[10px] text-slate-400 font-bold text-center block">{p.description}</span>
+            {/* Card 2 */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all text-center space-y-4 flex flex-col justify-center items-center">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#C5A880]">
+                <MapPin className="w-5 h-5 bg-transparent" />
               </div>
-            ))}
+              <h5 className="font-extrabold text-[12px] text-[#051124] leading-relaxed">مواقع استراتيجية متميزة</h5>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all text-center space-y-4 flex flex-col justify-center items-center">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#C5A880]">
+                <Compass className="w-5 h-5 bg-transparent" />
+              </div>
+              <h5 className="font-extrabold text-[12px] text-[#051124] leading-relaxed">تصميم مدروس</h5>
+            </div>
+
+            {/* Card 4 */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all text-center space-y-4 flex flex-col justify-center items-center">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#C5A880]">
+                <CheckCircle2 className="w-5 h-5 bg-transparent" />
+              </div>
+              <h5 className="font-extrabold text-[12px] text-[#051124] leading-relaxed">إشراف على جميع المراحل</h5>
+            </div>
+
+            {/* Card 5 */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all text-center space-y-4 flex flex-col justify-center items-center">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#C5A880]">
+                <ThumbsUp className="w-5 h-5 bg-transparent" />
+              </div>
+              <h5 className="font-extrabold text-[12px] text-[#051124] leading-relaxed">شركاء نجاح موثوقون</h5>
+            </div>
+
+            {/* Card 6 */}
+            <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs hover:shadow-md transition-all text-center space-y-4 flex flex-col justify-center items-center">
+              <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-[#C5A880]">
+                <Award className="w-5 h-5 bg-transparent" />
+              </div>
+              <h5 className="font-extrabold text-[12px] text-[#051124] leading-relaxed">جودة في كل تفصيلة</h5>
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* 7. Testimonials Slider */}
-      <section id="testimonials-hub" className="max-w-7xl mx-auto px-4 md:px-8 space-y-12">
-        <div className="text-center space-y-3">
-          <span className="text-brand-light font-extrabold text-xs tracking-wider block">شركاء الرخاء</span>
-          <h3 className="text-2xl md:text-3.5xl font-black text-brand-primary">ماذا يقول ملاك تملك مشاريع آفاق العقارية؟</h3>
+      {/* 6. Real Estate Statistics Block */}
+      <section id="stats-dashboard" className="max-w-7xl mx-auto px-4 md:px-8">
+        <div className="bg-[#051124] rounded-2xl p-10 md:p-14 text-white relative overflow-hidden shadow-2xl">
+          <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center divide-y sm:divide-y-0 lg:divide-x lg:divide-x-reverse divide-[#C5A880]/15">
+            
+            {/* Stat 1 */}
+            <div className="pt-6 sm:pt-0">
+              <span className="text-3xl md:text-5xl font-black text-[#C5A880] tracking-tight block mb-2">+1</span>
+              <p className="text-xs md:text-sm font-extrabold text-slate-100">مليون م²</p>
+              <p className="text-[10px] text-slate-400 mt-1 font-semibold leading-relaxed">أراضي تحت التطوير</p>
+            </div>
+
+            {/* Stat 2 */}
+            <div className="pt-6 sm:pt-0 sm:px-4">
+              <span className="text-3xl md:text-5xl font-black text-[#C5A880] tracking-tight block mb-2">+10</span>
+              <p className="text-xs md:text-sm font-extrabold text-slate-100">مشاريع سكنية</p>
+              <p className="text-[10px] text-slate-400 mt-1 font-semibold leading-relaxed">سكنية واستثمارية</p>
+            </div>
+
+            {/* Stat 3 */}
+            <div className="pt-6 sm:pt-0 sm:px-4">
+              <span className="text-3xl md:text-5xl font-black text-[#C5A880] tracking-tight block mb-2">+500</span>
+              <p className="text-xs md:text-sm font-extrabold text-slate-100">وحدة سكنية</p>
+              <p className="text-[10px] text-slate-400 mt-1 font-semibold leading-relaxed">تحت التطوير والتسليم</p>
+            </div>
+
+            {/* Stat 4 */}
+            <div className="pt-6 sm:pt-0 sm:px-4">
+              <span className="text-3xl md:text-5xl font-black text-[#C5A880] tracking-tight block mb-2">100%</span>
+              <p className="text-xs md:text-sm font-extrabold text-slate-100">التزام بالجودة</p>
+              <p className="text-[10px] text-slate-400 mt-1 font-semibold leading-relaxed">في كل مرحلة</p>
+            </div>
+
+          </div>
         </div>
+      </section>
 
-        {/* Carousel slide card */}
-        <div className="relative max-w-4xl mx-auto bg-brand-primary text-white rounded-3xl p-8 md:p-12 shadow-2xl overflow-hidden">
-          {/* background embellishments */}
-          <div className="absolute top-3 left-3 text-slate-100/10 font-bold text-8xl leading-none">“</div>
+      {/* 7. Contact Banner (هل تبحث عن الجودة والثقة؟) */}
+      <section id="contact-promo-banner" className="max-w-7xl mx-auto px-4 md:px-8">
+        <div id="cta-contact-box" className="relative rounded-2xl p-8 md:p-14 text-white overflow-hidden shadow-2xl" 
+             style={{ 
+               backgroundColor: '#051124', 
+               backgroundImage: `linear-gradient(to right, rgba(5,17,36,0.92), rgba(5,17,36,0.65)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80')`,
+               backgroundSize: 'cover',
+               backgroundPosition: 'center',
+               backgroundBlendMode: 'multiply'
+             }}>
           
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTestimonial}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.4 }}
-              className="space-y-6 text-right"
-            >
-              {/* Rating stars */}
-              <div className="flex items-center gap-1 justify-start flex-row-reverse">
-                {[...Array(testimonials[activeTestimonial].rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-brand-accent fill-brand-accent" />
-                ))}
-              </div>
+          <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 flex-row-reverse">
+            
+            {/* Right text content */}
+            <div className="text-right space-y-3 lg:max-w-2xl">
+              <h4 className="text-xl md:text-3xl font-black text-white">هل تبحث عن الجودة والثقة؟</h4>
+              <p className="text-xs md:text-sm text-slate-300 font-medium">دعنا نساعدك في إختيار منزل أو فرصة استثمارية تدوم.</p>
+            </div>
 
-              {/* content */}
-              <p className="text-xs md:text-sm text-slate-200 leading-bold leading-relaxed font-semibold">
-                "{testimonials[activeTestimonial].content}"
-              </p>
-
-              {/* Owner card info */}
-              <div className="flex items-center gap-3.5 pt-4 justify-start flex-row-reverse border-t border-white/10">
-                <img
-                  src={testimonials[activeTestimonial].avatar}
-                  alt={testimonials[activeTestimonial].name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-brand-accent bg-slate-800"
-                  referrerPolicy="no-referrer"
-                />
-                <div>
-                  <h4 className="font-extrabold text-xs md:text-sm text-white">
-                    {testimonials[activeTestimonial].name}
-                  </h4>
-                  <p className="text-xxs text-brand-light pt-0.5">
-                    {testimonials[activeTestimonial].role} - مستملك في <span className="font-bold text-brand-accent">"{testimonials[activeTestimonial].projectBought}"</span>
-                  </p>
+            {/* Left direct contact buttons and info */}
+            <div className="flex flex-col sm:flex-row items-center gap-6 text-slate-200">
+              
+              {/* WhatsApp direct dial */}
+              <a 
+                href="https://wa.me/966551531050" 
+                target="_blank" 
+                rel="noreferrer" 
+                className="flex items-center gap-3 bg-white/5 hover:bg-white/10 px-6 py-2.5 rounded-xl border border-white/10 transition-colors flex-row-reverse"
+              >
+                <div className="text-right">
+                  <span className="text-[9px] block text-slate-400 font-bold">واتساب</span>
+                  <p className="text-xs font-extrabold text-white">055 153 1050</p>
                 </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+                <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center text-green-400">
+                  <span className="font-extrabold text-lg">💬</span>
+                </div>
+              </a>
 
-          {/* Nav Controls */}
-          <div className="flex gap-3 justify-end pt-8">
-            <button
-              onClick={prevTestimonial}
-              className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors font-bold text-white cursor-pointer"
-              aria-label="المراجعة السابقة"
-            >
-              <ArrowRight className="w-5 h-5" />
-            </button>
-            <button
-              onClick={nextTestimonial}
-              className="p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors font-bold text-white cursor-pointer"
-              aria-label="المراجعة التالية"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
+              {/* Central Direct Phone */}
+              <a 
+                href="tel:920015358" 
+                className="flex items-center gap-3 bg-white/5 hover:bg-white/10 px-6 py-2.5 rounded-xl border border-white/10 transition-colors flex-row-reverse"
+              >
+                <div className="text-right">
+                  <span className="text-[9px] block text-slate-400 font-bold">اتصل بنا</span>
+                  <p className="text-xs font-extrabold text-white">9200 15358</p>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-[#C5A880]/15 flex items-center justify-center text-[#C5A880]">
+                  <span className="font-extrabold text-md">📞</span>
+                </div>
+              </a>
+
+              {/* Gold Button */}
+              <button
+                onClick={() => onNavigate('contact')}
+                className="w-full sm:w-auto px-8 py-4 bg-[#C5A880] text-slate-900 hover:bg-[#b59870] font-black rounded-lg text-xs md:text-sm transition-all shadow-md cursor-pointer active:scale-95"
+              >
+                تواصل معنا الآن
+              </button>
+
+            </div>
+
           </div>
         </div>
       </section>
 
-      {/* 8. CRM Sales Direct Contact Form Section */}
-      <section id="crm-quick-contact" className="max-w-4xl mx-auto px-4">
+      {/* 8. CRM Quick Consult / Contact form (moved to background or integrated cleanly) */}
+      <section id="consultation-stage" className="max-w-4xl mx-auto px-4">
         <div className="bg-white border border-slate-100 rounded-3xl p-8 md:p-12 shadow-2xl text-right relative overflow-hidden">
           
           <div className="space-y-4 mb-8">
             <div className="flex items-center gap-2 justify-start flex-row-reverse">
-              <Building2 className="w-5 h-5 text-brand-accent" />
-              <h4 className="font-black text-lg md:text-xl text-brand-primary">استشارة عقارية فورية وطلب معاينة</h4>
+              <Building2 className="w-5 h-5 text-[#C5A880]" />
+              <h4 className="font-black text-lg md:text-xl text-[#051124]">طلب معاينة واستشارة عقارية</h4>
             </div>
-            <p className="text-xs text-slate-500 font-bold max-w-xl">
-              سجل استفسارك المالي أو موعد المعاينة وسيقوم خبير مهندسين ومستشار المبيعات باتصال وتنسيق معك خلال 15 دقيقة فقط بدقة.
+            <p className="text-xs text-slate-500 font-extrabold">
+              نسعد بخدمتكم وتنسيق زيارة خاصة لمواقع عرض مشاريع آفاق العقارية.
             </p>
           </div>
 
@@ -617,13 +534,13 @@ export default function HomeView({
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="p-6 bg-brand-primary text-white rounded-2xl text-center space-y-4"
+              className="p-6 bg-[#051124] text-white rounded-2xl text-center space-y-4"
             >
-              <CheckCircle2 className="w-12 h-12 text-brand-accent mx-auto" />
+              <CheckCircle2 className="w-12 h-12 text-[#C5A880] mx-auto" />
               <div>
                 <h5 className="font-extrabold text-sm md:text-base">تم إرسال طلب تملكك بنجاح لمجموعة آفاق</h5>
-                <p className="text-xxs text-white/80 mt-1">
-                  رقم طلبك الداخلي: #AFAQ-{Math.floor(Math.random() * 10000)}. سيتم الاتصال بك هاتفياً وعلى الواتساب فوراً.
+                <p className="text-[10px] text-white/80 mt-1">
+                  سيقوم خبير مستشاري المبيعات بالتواصل معكم هاتفياً لترتيب الزيارة في أقرب وقت.
                 </p>
               </div>
             </motion.div>
@@ -637,30 +554,30 @@ export default function HomeView({
                     required
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    placeholder="عبدالرحمن بن محمد"
-                    className="w-full p-3 border border-slate-200 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary rounded-xl outline-none text-right font-medium"
+                    placeholder="الاسم الثلاثي أو الثنائي"
+                    className="w-full p-3 border border-slate-200 focus:border-[#051124] focus:ring-1 focus:ring-[#051124] rounded-xl outline-none text-right font-medium"
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-600 block">رقم الجوال السعودي المباشر</label>
+                  <label className="font-bold text-slate-600 block">رقم الجوال مباشر</label>
                   <input
                     type="tel"
                     required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="05xxxxxxx"
-                    className="w-full p-3 border border-slate-200 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary rounded-xl outline-none text-right placeholder:text-left font-medium"
+                    className="w-full p-3 border border-slate-200 focus:border-[#051124] focus:ring-1 focus:ring-[#051124] rounded-xl outline-none text-right placeholder:text-left font-medium"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-600 block">المجمع العقاري المهتم به</label>
+                  <label className="font-bold text-slate-600 block">المجمع العقاري</label>
                   <select
                     value={formData.project}
                     onChange={(e) => setFormData({ ...formData, project: e.target.value })}
-                    className="w-full p-3 border border-slate-200 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary rounded-xl outline-none text-right font-bold"
+                    className="w-full p-3 border border-slate-200 focus:border-[#051124] focus:ring-1 focus:ring-[#051124] rounded-xl outline-none text-right font-bold"
                   >
                     <option value="">حدد مشروعاً...</option>
                     {projects.map((p) => (
@@ -669,13 +586,13 @@ export default function HomeView({
                   </select>
                 </div>
                 <div className="space-y-1">
-                  <label className="font-bold text-slate-600 block">الميزانية المرصودة</label>
+                  <label className="font-bold text-slate-600 block">الميزانية التقريبية</label>
                   <select
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full p-3 border border-slate-200 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary rounded-xl outline-none text-right font-bold"
+                    className="w-full p-3 border border-slate-200 focus:border-[#051124] focus:ring-1 focus:ring-[#051124] rounded-xl outline-none text-right font-bold"
                   >
-                    <option value="">حدد النطاق السعري لشراء العقار...</option>
+                    <option value="">حدد النطاق السعري...</option>
                     <option value="1.5m - 3m">1.5 مليون - 3 مليون ر.س</option>
                     <option value="3m - 5m">3 مليون - 5 مليون ر.س</option>
                     <option value="5m+">فوق 5 ملايين ر.س</option>
@@ -684,20 +601,20 @@ export default function HomeView({
               </div>
 
               <div className="space-y-1">
-                <label className="font-bold text-slate-600 block">ما هي تفاصيل رغبتك أو أسئلتك؟</label>
+                <label className="font-bold text-slate-600 block">تفاصيل رغبتكم</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                  placeholder="أرغب في زيارة فلة العرض ومعرفة تفاصيل التمويل من بنك الراجحي..."
-                  className="w-full h-24 p-3 border border-slate-200 focus:border-brand-primary focus:ring-1 focus:ring-brand-primary rounded-xl outline-none text-right resize-none font-semibold text-slate-700"
+                  placeholder="أرغب في الاستفسار عن كفاءة العزل وتسهيلات تملك الدفع..."
+                  className="w-full h-24 p-3 border border-slate-200 focus:border-[#051124] focus:ring-1 focus:ring-[#051124] rounded-xl outline-none text-right resize-none font-semibold text-slate-700"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-brand-primary hover:bg-brand-dark text-white font-black py-3.5 rounded-xl shadow-lg transition-all text-sm shimmer-btn cursor-pointer"
+                className="w-full bg-[#051124] hover:bg-[#071C3D] text-white font-black py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer"
               >
-                تقديم استشارة تملك ومعاينة فورية
+                ارسل طلب الاتصال وموعد المعاينة
               </button>
             </form>
           )}

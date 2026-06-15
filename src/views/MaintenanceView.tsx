@@ -307,7 +307,7 @@ export default function MaintenanceView({ projects }: MaintenanceViewProps) {
             </div>
 
             <p className="text-xxs text-slate-500 font-bold leading-normal">
-              أدخل رقم التذكرة الخاص بك (مثل: <span className="font-semibold text-brand-primary">AFAQ-MNT-4850</span>) في صندوق البحث بالأسفل لتلقي تطورات الفحص والتعيين وتتبع حالة العمل والضمان الفني فورا دقة.
+              أدخل رقم التذكرة الخاص بك (مثل: <span className="font-semibold text-brand-primary">AFAQ-MNT-4850</span>) في صندوق البحث بالأسفل لتلقي تطورات الفحص والتعيين وتتبع حالة العمل والضمان الفني فورا وبدقة متناهية.
             </p>
 
             <form onSubmit={handleTrackSearch} className="flex gap-2 text-xs">
@@ -410,7 +410,7 @@ export default function MaintenanceView({ projects }: MaintenanceViewProps) {
                       className="p-4 rounded-2xl bg-red-50 text-red-700 text-xs font-bold text-center flex items-center gap-2 justify-center"
                     >
                       <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-                      <span>عذراً، لم نجد أي تذاكر مطابقة للرقم المدخل. يرجى مراجعة التهجئة دقة.</span>
+                      <span>عذراً، لم نجد أي تذاكر مطابقة للرقم المدخل. يرجى مراجعة التهجئة بدقة.</span>
                     </motion.div>
                   )
                 ) : (

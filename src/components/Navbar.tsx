@@ -37,18 +37,31 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLinkClick = (view: string) => {
+  const handleLinkClick = (view: string, hash?: string) => {
     onNavigate(view);
     setIsOpen(false);
     setMegaMenuOpen(false);
+    
+    if (hash) {
+      setTimeout(() => {
+        const idClean = hash.replace('#', '');
+        const element = document.getElementById(idClean);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 200);
+    }
   };
 
   const navItems = [
     { label: 'الرئيسية', view: 'home' },
-    { label: 'المشاريع', view: 'projects' },
-    { label: 'من نحن', view: 'about' },
-    { label: 'بوابة الصيانة', view: 'maintenance' },
-    { label: 'اتصل بنا', view: 'contact' },
+    { label: 'عن الشركة', view: 'about' },
+    { label: 'مشاريعنا', view: 'projects' },
+    { label: 'خدماتنا', view: 'home', hash: '#services' },
+    { label: 'الجودة', view: 'home', hash: '#why-us' },
+    { label: 'المدونة', view: 'home', hash: '#blog' },
+    { label: 'تواصل معنا', view: 'contact' },
+    { label: 'EN', view: 'home', isEn: true },
   ];
 
   return (
@@ -74,28 +87,36 @@ export default function Navbar({
             </div>
 
             <div className="text-right">
-              <h1 className={`font-black text-sm md:text-base leading-none tracking-tight transition-colors ${
+              <h1 className={`font-black text-base leading-tight tracking-tight transition-colors ${
                 scrolled || currentView !== 'home' ? 'text-white' : 'text-brand-primary md:text-white'
               }`}>
                 آفاق النشأة
               </h1>
-              <span className={`text-[10px] block font-bold tracking-wider leading-none mt-1 ${
-                scrolled || currentView !== 'home' ? 'text-brand-light' : 'text-slate-500 md:text-brand-light/95'
+              <span className={`text-[9px] block font-extrabold tracking-wider leading-none mt-0.5 ${
+                scrolled || currentView !== 'home' ? 'text-brand-accent' : 'text-brand-accent md:text-brand-accent'
               }`}>
-                AFAF AL-NASHA
+                للتطوير العقاري
               </span>
             </div>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1 space-x-reverse flex-row-reverse">
+          <nav className="hidden lg:flex items-center space-x-1 space-x-reverse flex-row-reverse z-10">
             {/* Standard Nav Items */}
             {navItems.map((item) => (
               <button
-                key={item.view}
-                onClick={() => handleLinkClick(item.view)}
-                className={`px-4 py-2 text-sm font-bold transition-all relative rounded-xl cursor-pointer ${
-                  currentView === item.view
+                key={item.label}
+                onClick={() => {
+                  if (item.isEn) {
+                    // Static EN option
+                    return;
+                  }
+                  handleLinkClick(item.view, item.hash);
+                }}
+                className={`px-3 py-2 text-sm font-bold transition-all relative rounded-xl cursor-pointer ${
+                  item.isEn
+                    ? 'text-[#C5A880] font-black'
+                    : currentView === item.view && !item.hash
                     ? 'text-white bg-white/10 shadow-sm'
                     : scrolled || currentView !== 'home'
                     ? 'text-slate-100 hover:text-white hover:bg-white/5'
@@ -219,9 +240,9 @@ export default function Navbar({
             {/* Primary Action */}
             <button
               onClick={() => handleLinkClick('contact')}
-              className="bg-brand-accent hover:bg-amber-600 text-brand-dark px-5 py-2 rounded-xl font-black text-xs transition-all shadow-md hover:shadow-brand-accent/20 shimmer-btn cursor-pointer"
+              className="bg-[#051124] hover:bg-brand-dark text-white px-5 py-2.5 rounded-lg font-bold text-xs transition-all border border-white/10 hover:border-white/20 cursor-pointer"
             >
-              حجز موعد واستشارة
+              تواصل معنا
             </button>
           </div>
 
@@ -264,10 +285,13 @@ export default function Navbar({
           <div className="space-y-1.5">
             {navItems.map((item) => (
               <button
-                key={item.view}
-                onClick={() => handleLinkClick(item.view)}
+                key={item.label}
+                onClick={() => {
+                  if (item.isEn) return;
+                  handleLinkClick(item.view, item.hash);
+                }}
                 className={`w-full text-right px-4 py-3 rounded-xl font-bold text-sm block cursor-pointer ${
-                  currentView === item.view
+                  currentView === item.view && !item.hash
                     ? 'bg-brand-accent text-brand-dark'
                     : 'hover:bg-white/10 text-slate-100'
                 }`}
